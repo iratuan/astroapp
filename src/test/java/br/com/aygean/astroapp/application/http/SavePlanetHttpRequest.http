@@ -1,0 +1,9 @@
+POST http://localhost:8080/api/planets HTTP/1.1
+content-type: application/json
+
+{
+    "slug": "eath",
+    "name": "eath",
+    "description":"My amazing planet",
+    "image":"img.png"
+}
