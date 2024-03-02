@@ -1,7 +1,11 @@
 package br.com.aygean.astroapp.adapters.inbound;
 
 import java.util.ArrayList;
+
+import br.com.aygean.astroapp.adapters.inbound.util.UrlUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +46,7 @@ public class PlanetController {
 
     @SuppressWarnings("null")
     @GetMapping
-    public ResponseEntity<Object> listAllPlanets() {
+    public ResponseEntity<Object> listAllPlanets(HttpServletRequest request) {
 
         var PlanetRequest = new PlanetRequest(null);
         PlanetRequest.setCondicoes(null);
@@ -50,23 +54,28 @@ public class PlanetController {
 
         var resposta = search.getBody().getResposta();
         var planetListResponse = new ArrayList<>();
+        var baseUrl = UrlUtil.getBaseUrl(request);
         for (var p : resposta) {
-            planetListResponse.add(planetMapper.mapToPlanetResponse(p));
+            var pResponse = planetMapper.mapToPlanetResponse(p);
+            pResponse.setUrl(baseUrl + "/api/planets/show/" + p.getSlug());
+            planetListResponse.add(pResponse);
         }
         return ResponseEntity.ok(planetListResponse);
     }
 
     @SuppressWarnings("null")
     @GetMapping("/show/{slug}")
-    public ResponseEntity<Object> showPlanet(@PathVariable String slug) {
+    public ResponseEntity<Object> showPlanet(@PathVariable String slug, HttpServletRequest request) {
         var PlanetRequest = new PlanetRequest(slug);
         var search = searchPlanetRestAdapter.search(PlanetRequest);
         if (search.getStatusCode().is2xxSuccessful()) {
             if (!search.getBody().getResposta().isEmpty()) {
-                var response = planetMapper.mapToPlanetResponse(search.getBody().getResposta().get(0));
-                return ResponseEntity.ok(response);
+                var planet = search.getBody().getResposta().get(0);
+                var baseUrl = UrlUtil.getBaseUrl(request);
+                var pResponse = planetMapper.mapToPlanetResponse(planet);
+                pResponse.setUrl(baseUrl + "/api/planets/show/" + planet.getSlug());
+                return ResponseEntity.ok(pResponse);
             }
-
         }
         /*
          * Se a resposta está vazia, considere como um BadRequest e forneça uma mensagem
