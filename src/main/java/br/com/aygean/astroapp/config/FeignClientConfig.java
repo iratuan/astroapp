@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FeignClientConfig {
 
-    @Value("${service.url}")
+    @Value("${external.sistemasolar.api.url}")
     private String baseUrl;
 
     @Bean

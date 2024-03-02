@@ -1,11 +1,11 @@
-package br.com.aygean.astroapp.adapters.inbound.response;
+package br.com.aygean.astroapp.adapters.outbound.response;
 
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public  class ApiPlanetResponse {
+public  class ItemApiPlanetResponse {
     @JsonProperty("_id")
     private String id;
     private String imgUrl;

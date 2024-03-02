@@ -7,7 +7,8 @@ public class PlanetResponse {
     private String image;
 
     public PlanetResponse(String slug, String name, String description, String image) {
-        this.slug = slug;
+        var slugParts = slug.split("-");
+        this.slug = slugParts[0];
         this.name = name;
         this.description = description;
         this.image = image;
@@ -27,6 +28,4 @@ public class PlanetResponse {
     public String getImage() {
         return image;
     }
-
-    
 }
